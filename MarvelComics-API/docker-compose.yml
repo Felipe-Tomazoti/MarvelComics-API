@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+ api:
+    container_name: "api"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    depends_on:
+      - db_marvel
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://api:api@db_marvel:5432/marvelComics?schema=public
+
+ db_marvel:
+    container_name: "db_marvel"
+    image: "postgres:alpine"
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=api
+      - POSTGRES_PASSWORD=api
+      - POSTGRES_DB=marvelComics

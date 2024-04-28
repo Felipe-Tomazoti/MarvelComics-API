@@ -30,5 +30,9 @@
     "ts-jest": "^29.1.2",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "blueimp-md5": "^2.19.0"
   }
 }

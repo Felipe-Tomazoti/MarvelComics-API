@@ -1,0 +1,29 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+model Character {
+    id String @id @unique @default(uuid())
+    name String
+    description String
+    url String
+}
+
+model Comic {
+    id String @id @unique @default(uuid())
+    title String
+    description String
+    postedDate  DateTime
+    cover String
+}
+
+model Creator {
+    id String @id @unique @default(uuid())
+    name String
+    function String
+}
