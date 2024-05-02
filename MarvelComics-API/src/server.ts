@@ -13,3 +13,5 @@ function main(){
 }
 
 main();
+
+export const server = app;

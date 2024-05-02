@@ -2,10 +2,16 @@
   "name": "marvelcomics-api",
   "version": "1.0.0",
   "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
     "dev": "tsx watch ./src/server.ts",
-    "test": "jest",
-    "test:debug": "jest --watch"
+    "setup": "docker-compose up -d && npx prisma migrate dev",
+    "cannonComic": "npx autocannon -c 10 -d 10 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] localhost:5432/comicGetAll",
+    "cannonCreator": "npx autocannon -c 10 -d 10 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] localhost:5432/creatorGetAll",
+    "cannonCharacter": "npx autocannon -c 10 -d 10 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] localhost:5432/characterGetAll",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -21,12 +27,14 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
     "@types/supertest": "^6.0.2",
+    "autocannon": "^7.15.0",
     "bcryptjs": "^2.4.3",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
     "jest": "^29.7.0",
     "prisma": "^5.12.1",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.1.2",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"
@@ -34,5 +42,8 @@
   "dependencies": {
     "axios": "^1.6.8",
     "blueimp-md5": "^2.19.0"
+  },"jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   }
 }

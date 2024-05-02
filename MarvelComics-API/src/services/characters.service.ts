@@ -1,42 +1,84 @@
 import { prisma } from '../lib/prisma';
-import { publicKey, ts, createHash} from '../HashCode/geraHash';
+import { publicKey, ts, createHash } from '../HashCode/geraHash';
 
-export class CharacterService{ 
+export class CharacterService {
 
-    async getAll(){
-        try{
-          const hash = createHash();
-              const objs = fetch(`https://gateway.marvel.com/v1/public/events?ts=${ts}&apikey=${publicKey}&hash=${hash}&name=House%20of%20M`)
-              .then((response) => {return response.json();
-              }).then((jsonParsed) => {
-                  const houseOfM = jsonParsed.data.results;
-                  const transformed = houseOfM.map((obj:any) => {
-                    return obj.characters.items.map((character:any) => character.name); 
-                  });
-                  return (transformed);
-                });
-              
-            return objs;
-            }catch(error){
-              console.error('Erro ao obter dados do personagem da Marvel:', error);
+  async getAll() {
+    try {
+      const characters = await prisma.character.findMany();
+      return await characters.map((obj: any) => obj.name);
+    } catch (error) {
+      console.error('Erro ao obter dados do personagem da Marvel:', error);
+    }
+  }
+
+  async getByName(name: string) {
+    try {
+      const character = await prisma.character.findUnique({
+        where: {
+          name: name
         }
+      })
+      return character;
+    } catch (error) {
+      console.log(error)
     }
+  }
 
-    async getById(id: string){
-      try{
-        const hash = createHash();
-              const objs = fetch(`https://gateway.marvel.com/v1/public/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}&name=${id}`)
-              .then((response) => {return response.json();});
-            return objs;
-      }catch(error){
-        console.log(error)
-      }
+  async create(body: any) {
+    try {
+      const newCharacter = await prisma.character.create({
+        data: {
+          name: body.name,
+          description: body.description,
+          url: body.url,
+        }
+      })
+      return newCharacter;
+    } catch (error) {
+      console.log(error);
     }
-}
+  }
 
-  /*
-await axios.get(`https://gateway.marvel.com/v1/public/characters/${marvelId}`, {
-        params: {
-          apikey: '',
+  async update(name: string, body: any) {
+    try {
+      const character = await prisma.character.update({
+        where: {
+          name: name,
         },
-*/ 
+        data: {
+          name: body.name,
+          description: body.description,
+          url: body.url,
+        }
+      })
+      return character;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async delete(name: string){
+    try{
+      await prisma.character.delete({
+        where: {
+          name: name,
+        },
+      })
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  async characterImages(){
+    try{
+      const characterImages = (await prisma.character.findMany()).map((obj:any) => {
+        return {name: obj.name, url: obj.url}
+      });
+      return characterImages;
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+}

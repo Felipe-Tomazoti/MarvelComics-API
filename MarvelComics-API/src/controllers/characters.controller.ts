@@ -13,9 +13,9 @@ class CharacterController {
     }
   }
 
-  async getById(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply) {
+  async getByName(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply) {
     try {
-      const character = await new CharacterService().getById(req.params.id);
+      const character = await new CharacterService().getByName(req.params.id);
       res.status(200).send(character);
     } catch (error) {
       console.error('Erro ao encontrar todos os personagens:', error);
@@ -25,13 +25,39 @@ class CharacterController {
 
   async create(req: FastifyRequest, res: FastifyReply) {
     try {
-
+      const character = await new CharacterService().create(req.body);
+      res.status(201).send(character)
     } catch (error) {
       console.log(error);
     }
   }
 
+  async update(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply) {
+    try {
+      const character = await new CharacterService().update(req.params.id, req.body);
+      res.status(202).send(character)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply) {
+    try {
+      await new CharacterService().delete(req.params.id);
+      res.status(200).send("Excluded Character")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async characterImages(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply) {
+    try {
+      const getAllImages = await new CharacterService().characterImages();
+      res.status(200).send(getAllImages)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
 }
-
 export default new CharacterController();

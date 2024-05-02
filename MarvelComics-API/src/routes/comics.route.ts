@@ -2,11 +2,11 @@ import { FastifyInstance } from "fastify"
 import comicController from "../controllers/comics.controller";
 
 export default async function(fastify: FastifyInstance){
-
-    //fastify.post('/comicsCreate', comicController.create);
-    //fastify.get('/comicsGetAll', comicController.getAll);
-    //fastify.get('/comicsGetByName', comicController.getByName);
-    //fastify.put('/comicsUpdate', comicController.update);
-    //fastify.delete('/comicsDelete', comicController.delete);
-
+    fastify.post('/comicCreate', comicController.create);
+    fastify.get('/comicGetAll', comicController.getAll);
+    fastify.get('/comicCoverGetAll', comicController.comicCoverGetAll);
+    fastify.get('/comicGetByTitle/:id', comicController.getByTitle);
+    fastify.get('/comicAfter2005', comicController.comicAfter2005);
+    fastify.put('/comicUpdate/:id', comicController.update);
+    fastify.delete('/comicDelete/:id', comicController.delete);
 }
