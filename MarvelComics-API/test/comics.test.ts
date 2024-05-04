@@ -6,6 +6,20 @@ describe('Should test comics endpoints', () => {
     let _testServer: any
     let _testServerAddress: string
 
+    async function getAllComicsAfter2005() {
+        return await _testServer.inject({
+            method: 'GET',
+            url: `${_testServerAddress}/comicAfter2005`,
+        })
+    }
+
+    async function getAllCovers() {
+        return await _testServer.inject({
+            method: 'GET',
+            url: `${_testServerAddress}/comicCoverGetAll`,
+        })
+    }
+
     async function create(comic: any) {
         return await _testServer.inject({
             method: 'POST',
@@ -54,7 +68,7 @@ describe('Should test comics endpoints', () => {
     })
 
     beforeEach(async () => {
-        await runSeedComics;
+        await runSeedComics();
     });
 
     afterAll(async () => {
@@ -163,4 +177,44 @@ describe('Should test comics endpoints', () => {
         deepStrictEqual(statusCode, 200);
         deepStrictEqual(msg, expected)
     })
+
+    it('Should getAll covers from comics', async () => {
+        const covers = await getAll();
+        const coverOBJ = JSON.parse(covers.body)
+
+        const cover1 = await getByTitle(coverOBJ[0]);
+        const objParsed1 = JSON.parse(cover1.body);
+        const url0 = objParsed1.url;
+
+        const cover2 = await getByTitle(coverOBJ[1]);
+        const objParsed2 = JSON.parse(cover2.body);
+        const url1 = objParsed2.url;
+
+        const cover3 = await getByTitle(coverOBJ[2]);
+        const objParsed3 = JSON.parse(cover3.body);
+        const url2 = objParsed3.url;
+
+        const objs = await getAllCovers();
+        const obj = JSON.parse(objs.body)
+        const objURLS = obj.map((element: any) => element.url);
+        const statusCode = objs.statusCode;
+
+        deepStrictEqual(statusCode, 200);
+        deepStrictEqual(objURLS[0], url0);
+        deepStrictEqual(objURLS[1], url1);
+        deepStrictEqual(objURLS[2], url2);
+    })
+
+    it('Should getAll comics after 2005', async () => {
+        const comics = await getAllComicsAfter2005();
+        const comicsOBJ = JSON.parse(comics.body);
+        const publishedYear = comicsOBJ.map((element:any) => element.postedDate)
+        const statusCode = comics.statusCode
+        const current = new Date(publishedYear[0]).getFullYear() > 2005
+
+        deepStrictEqual(statusCode, 200);
+        deepStrictEqual(comicsOBJ.length, 1)
+        deepStrictEqual(current, true);
+    })
+
 })

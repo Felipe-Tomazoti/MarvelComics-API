@@ -6,6 +6,20 @@ describe('Should test creators endpoints', () => {
     let _testServer: any
     let _testServerAddress: string
 
+    async function getCreatorsMinusTen(){
+        return await _testServer.inject({
+            method: 'GET',
+            url: `${_testServerAddress}/getCreatorsMinusTen`,
+        })
+    }
+
+    async function getAllPenciller(){
+        return await _testServer.inject({
+            method: 'GET',
+            url: `${_testServerAddress}/pencillerGetAll`,
+        })
+    }
+
     async function create(creator: any) {
         return await _testServer.inject({
             method: 'POST',
@@ -158,5 +172,29 @@ describe('Should test creators endpoints', () => {
 
         deepStrictEqual(statusCode, 200);
         deepStrictEqual(msg, expected)
+    })
+
+    it('Should getAll penciller', async()=> {
+        const pencillers = await getAllPenciller();
+        const statusCode = pencillers.statusCode;
+        const pencillersOBJ = JSON.parse(pencillers.body)
+        const functionOBJ = pencillersOBJ.map((element:any) => {return element.function})
+        
+        deepStrictEqual(statusCode, 200);
+        deepStrictEqual(pencillersOBJ.length, 1)        
+        deepStrictEqual(functionOBJ[0], "penciller");
+    })
+
+    it('Should getAll creators who participated in more than 10 comics', async()=> {
+        const creators = await getCreatorsMinusTen(); 
+        const statusCode = creators.statusCode;
+        const creatorsOBJ = JSON.parse(creators.body)
+        const arrayLength = creatorsOBJ.length;
+        const numberOfComics = creatorsOBJ[0].comicName.length;
+        const current = numberOfComics < 10
+    
+        deepStrictEqual(statusCode, 200);
+        deepStrictEqual(arrayLength, 1)        
+        deepStrictEqual(current, true);
     })
 })

@@ -7,10 +7,10 @@
   },
   "scripts": {
     "dev": "tsx watch ./src/server.ts",
-    "setup": "docker-compose up -d && npx prisma migrate dev",
-    "cannonComic": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:5432/comicGetAll",
-    "cannonCreator": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:5432/creatorGetAll",
-    "cannonCharacter": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:5432/characterGetAll",
+    "start": "npm install && docker-compose up -d && npx prisma migrate dev && npm run dev",
+    "cannonComic": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:3000/comicGetAll",
+    "cannonCreator": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:3000/creatorGetAll",
+    "cannonCharacter": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:3000/characterGetAll",
     "test": "jest --runInBand"
   },
   "keywords": [],
@@ -40,9 +40,12 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@fastify/swagger": "^8.14.0",
+    "@fastify/swagger-ui": "^3.0.0",
     "axios": "^1.6.8",
     "blueimp-md5": "^2.19.0"
-  },"jest": {
+  },
+  "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
   }

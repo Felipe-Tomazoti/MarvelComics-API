@@ -9,6 +9,7 @@ async function runSeedComics() {
         await prisma.character.deleteMany({});
         await prisma.comic.deleteMany({});
         await prisma.creator.deleteMany({});
+        
         comics.map(async(obj) => await prisma.comic.create({
             data: {
                 title: obj.title,

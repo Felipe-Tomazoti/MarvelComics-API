@@ -68,7 +68,9 @@ describe('Should test character endpoints', () => {
         await prisma.character.deleteMany({});
         await prisma.comic.deleteMany({});
         await prisma.creator.deleteMany({});
-        await _testServer.close();
+        if (_testServer) {
+            await _testServer.close()
+        }
     })
 
     it('Should create character', async () => {
