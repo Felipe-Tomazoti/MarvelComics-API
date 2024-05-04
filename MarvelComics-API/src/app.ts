@@ -1,7 +1,6 @@
 import fastify from "fastify"
 import 'dotenv/config'
 import { prisma } from "./lib/prisma"
-
 class App {
     public fastify = fastify()
     public constructor() {
@@ -12,8 +11,10 @@ class App {
     private async database() {
         try {
             await prisma.$connect();
-            console.log("Connect database success");
-            console.log("TIP: To populate the database, execute the route (GET): /startApi");
+            if (process.env.NODE_ENV != 'test') {
+                console.log("Connect database success");
+                console.log("TIP: To populate the database, execute the route (GET): /startApi");
+            }
         } catch (error) {
             console.log(error);
         }

@@ -5,7 +5,11 @@ export class CharacterService {
 
   async getAll() {
     try {
-      const characters = await prisma.character.findMany();
+      const characters = await prisma.character.findMany({
+        orderBy: {
+          name: 'asc',
+        }
+      });
       return await characters.map((obj: any) => obj.name);
     } catch (error) {
       console.error('Erro ao obter dados do personagem da Marvel:', error);
@@ -50,7 +54,7 @@ export class CharacterService {
           name: body.name,
           description: body.description,
           url: body.url,
-        }
+        },
       })
       return character;
     } catch (error) {
@@ -72,7 +76,11 @@ export class CharacterService {
 
   async characterImages(){
     try{
-      const characterImages = (await prisma.character.findMany()).map((obj:any) => {
+      const characterImages = (await prisma.character.findMany({
+        orderBy: {
+          name: 'asc',
+        }
+      })).map((obj:any) => {
         return {name: obj.name, url: obj.url}
       });
       return characterImages;

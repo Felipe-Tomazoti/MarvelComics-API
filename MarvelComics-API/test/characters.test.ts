@@ -1,10 +1,17 @@
 import { deepStrictEqual } from 'node:assert'
-import { runSeedCharacters} from './runSeedCharacters'
+import { runSeedCharacters } from './config.test.ts/runSeedCharacters'
 import { prisma } from '../src/lib/prisma'
 
 describe('Should test character endpoints', () => {
     let _testServer: any
     let _testServerAddress: string
+
+    async function getAllImages(){
+        return await _testServer.inject({
+            method: 'GET',
+            url: `${_testServerAddress}/characterImages`,
+        })
+    }
 
     async function create(character: any) {
         return await _testServer.inject({
@@ -57,20 +64,11 @@ describe('Should test character endpoints', () => {
         await runSeedCharacters();
     });
 
-    afterEach(async() => {
-        await prisma.character.deleteMany({});
-        await prisma.comic.deleteMany({});
-        await prisma.creator.deleteMany({});
-    })
-    
     afterAll(async () => {
         await prisma.character.deleteMany({});
         await prisma.comic.deleteMany({});
         await prisma.creator.deleteMany({});
-
-        if (_testServer) {
-            await _testServer.close();
-        }
+        await _testServer.close();
     })
 
     it('Should create character', async () => {
@@ -89,19 +87,19 @@ describe('Should test character endpoints', () => {
         deepStrictEqual(statusCode, 201);
     });
 
-    it('should getAll characters', async() => {
+    it('Should getAll characters', async () => {
         const allCharacters = await getAll();
         const statusCode = allCharacters.statusCode;
         const lengthArray = JSON.parse(allCharacters.body)
-        const isLengthGreaterOrEqualThree = lengthArray.length >= 3 
+        const isLengthGreaterOrEqualThree = lengthArray.length >= 3
 
-        deepStrictEqual(isLengthGreaterOrEqualThree, lengthArray.length>=3)
+        deepStrictEqual(isLengthGreaterOrEqualThree, lengthArray.length >= 3)
         deepStrictEqual(statusCode, 200);
     });
-    
-    it('Should getByName character', async() => {
+
+    it('Should getByName character', async () => {
         const input = {
-            name: "Felipe Cesar",
+            name: "Cesar Felipe",
             description: "Best in the word",
             url: "https://upload.wikimedia.org/wikipedia/pt/8/8d/Batman_por_Jim_Lee.jpg"
         }
@@ -120,9 +118,9 @@ describe('Should test character endpoints', () => {
         deepStrictEqual(statusCode, 200);
     })
 
-    it('Should update character', async() => {
+    it('Should update character', async () => {
         const input = {
-            name: "Felipe Cesar",
+            name: "Antonio",
             description: "Best in the word",
             url: "https://upload.wikimedia.org/wikipedia/pt/8/8d/Batman_por_Jim_Lee.jpg"
         }
@@ -145,9 +143,9 @@ describe('Should test character endpoints', () => {
         deepStrictEqual(statusCode, 202);
     })
 
-    it('Should delete character', async() => {
+    it('Should delete character', async () => {
         const input = {
-            name: "Felipe Cesar",
+            name: "Milton",
             description: "Best in the word",
             url: "https://upload.wikimedia.org/wikipedia/pt/8/8d/Batman_por_Jim_Lee.jpg"
         }
@@ -156,12 +154,39 @@ describe('Should test character endpoints', () => {
         const objParsed = JSON.parse(obj.body);
         const name = objParsed.name;
 
-        const excluded = await Delete(name); 
+        const excluded = await Delete(name);
         const msg = excluded.body
         const statusCode = excluded.statusCode;
         const expected = "Excluded Character"
 
         deepStrictEqual(statusCode, 200);
         deepStrictEqual(msg, expected)
+    })
+
+    it('Should getAll imagens from characters', async()=> {
+        const characters = await getAll();
+        const characOBJ = JSON.parse(characters.body)
+
+        const character1 = await getByName(characOBJ[0]);
+        const objParsed1 = JSON.parse(character1.body);
+        const url0 = objParsed1.url;
+        
+        const character2 = await getByName(characOBJ[1]);
+        const objParsed2 = JSON.parse(character2.body);
+        const url1 = objParsed2.url;
+
+        const character3 = await getByName(characOBJ[2]);
+        const objParsed3 = JSON.parse(character3.body);
+        const url2 = objParsed3.url;
+
+        const objs = await getAllImages();
+        const obj = JSON.parse(objs.body).flat()
+        const objURLS = obj.map((element:any) => element.url); 
+        const statusCode = objs.statusCode;
+        
+        deepStrictEqual(statusCode, 200);
+        deepStrictEqual(objURLS[0], url0);
+        deepStrictEqual(objURLS[1], url1);
+        deepStrictEqual(objURLS[2], url2);
     })
 })

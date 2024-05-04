@@ -37,17 +37,17 @@ const comics = [
 ]
 const creators = [
     {
-        name: "Junior Manela",
+        name: "Zidane",
         function: "writer",
         comicName: ["Turma da Mônica", "Turma da Mônica Jovem", "Turma da Mônica Idosa", "Chico Bento - o grande"]
     },
     {
-        name: "Felipe Cesar",
+        name: "Gabigol",
         function: "lyricist",
         comicName: ["Turma da Mônica", "Turma da Mônica Jovem", "Turma da Mônica Idosa", "Chico Bento - o grande"]
     },
     {
-        name: "Hugo",
+        name: "Matias",
         function: "penciller",
         comicName: ["Turma da Mônica", "Turma da Mônica Jovem", "Turma da Mônica Idosa", "Chico Bento - o grande"]
     }

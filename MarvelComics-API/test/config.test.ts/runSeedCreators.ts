@@ -1,20 +1,19 @@
 import 'dotenv/config';
-import { prisma } from "../src/lib/prisma"
-import { characters, comics, creators } from './dataTests'
+import { prisma } from "../../src/lib/prisma"
+import { creators } from './datas.test.ts/dataTests'
 
 const isTestEnv = process.env.NODE_ENV === 'test';
 
-async function runSeedCharacters() {
+async function runSeedCreators(){
     try {
         await prisma.character.deleteMany({});
         await prisma.comic.deleteMany({});
         await prisma.creator.deleteMany({});
-
-        characters.map(async(obj) => await prisma.character.create({
+        creators.map(async(obj) => await prisma.creator.create({
             data: {
                 name: obj.name,
-                description: obj.description,
-                url: obj.url,
+                function: obj.function,
+                comicName: obj.comicName,
             },
         }))
     } catch (error) {
@@ -24,6 +23,6 @@ async function runSeedCharacters() {
     }
 }
 
-if (!isTestEnv) runSeedCharacters();
+if (!isTestEnv) runSeedCreators();
 
-export { runSeedCharacters };
+export { runSeedCreators };

@@ -8,10 +8,10 @@
   "scripts": {
     "dev": "tsx watch ./src/server.ts",
     "setup": "docker-compose up -d && npx prisma migrate dev",
-    "cannonComic": "npx autocannon -c 10 -d 10 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] localhost:5432/comicGetAll",
-    "cannonCreator": "npx autocannon -c 10 -d 10 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] localhost:5432/creatorGetAll",
-    "cannonCharacter": "npx autocannon -c 10 -d 10 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] localhost:5432/characterGetAll",
-    "test": "jest"
+    "cannonComic": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:5432/comicGetAll",
+    "cannonCreator": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:5432/creatorGetAll",
+    "cannonCharacter": "npx autocannon -c 500 -d 15 --renderStatusCodes --latency --debug --warmup [ -c 1 -d 2] 0.0.0.0:5432/characterGetAll",
+    "test": "jest --runInBand"
   },
   "keywords": [],
   "author": "",
